@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.orangeandbronze.enlistment.dao.jdbc.StudentDaoJdbcIT
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 3.284 sec <<< FAILURE! - in com.orangeandbronze.enlistment.dao.jdbc.StudentDaoJdbcIT
+findStudentWithNoSections(com.orangeandbronze.enlistment.dao.jdbc.StudentDaoJdbcIT)  Time elapsed: 3.284 sec  <<< ERROR!
+java.lang.NullPointerException: null
+	at com.orangeandbronze.enlistment.dao.jdbc.StudentDaoJdbcIT.findStudentWithNoSections(StudentDaoJdbcIT.java:44)
+

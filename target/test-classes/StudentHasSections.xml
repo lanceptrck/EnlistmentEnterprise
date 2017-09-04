@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- findByStudentThatHasSections -->
+<dataset>
+	<students student_number="1" lastname="Mouse" firstname="Mickey"/>
+	<subjects  />
+	<subjects/>
+	<rooms />
+	<sections section_id="MHX123"/>
+	<sections section_id="TFX555"/>
+	<sections section_id="MHW432"/>
+	<enlistments student_number="1" section_id="MHX123"/>
+	<enlistments student_number="1" section_id="TFX555"/>
+	<enlistments student_number="1" section_id="MHW432"/>
+</dataset>

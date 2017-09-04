@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.orangeandbronze.enlistment.service.EnlistServiceIT
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 5, Time elapsed: 0.005 sec - in com.orangeandbronze.enlistment.service.EnlistServiceIT
