@@ -1,6 +1,8 @@
 package com.orangeandbronze.enlistment.controllers;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,9 +34,17 @@ public class LoginController extends HttpServlet {
 		int id = Integer.valueOf(req.getParameter("student_number"));
 
 		HttpSession session = ((HttpServletRequest) req).getSession();
-		service.login(id, session);
+		Map<String, String> studentInfo = (HashMap<String, String>) service.login(id);
 
-		req.getRequestDispatcher("get_student_enlistments").forward(req, resp);
+		if (!studentInfo.isEmpty()) {
+			session.setAttribute("studentNumber", studentInfo.get("studentNumber"));
+			session.setAttribute("lastName", studentInfo.get("lastName"));
+			session.setAttribute("firstName", studentInfo.get("firstName"));
+			req.getRequestDispatcher("get_student_enlistments").forward(req, resp);
+		} else {
+			req.setAttribute("noIdFound", true);
+			req.getRequestDispatcher("login.jsp").forward(req, resp);
+		}
 
 	}
 }

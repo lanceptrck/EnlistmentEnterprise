@@ -15,10 +15,8 @@ public class LoginService {
 		this.studentDao = studentDao;
 	}
 
-	public void login(int studentNumber, HttpSession session) {
+	public Map<String, String> login(int studentNumber) {
 		Map<String, String> studentInfo = studentDao.findUserInfobById(studentNumber);
-		session.setAttribute("studentNumber", studentInfo.get("studentNumber"));
-		session.setAttribute("lastName", studentInfo.get("lastName"));
-		session.setAttribute("firstName", studentInfo.get("firstName"));
+		return studentInfo;
 	}
 }

@@ -61,16 +61,13 @@ public class StudentDaoJdbc implements StudentDAO {
 				PreparedStatement stmt = conn.prepareStatement("select * from students where student_number = ?");) {
 			stmt.setInt(1, id);
 			try (ResultSet rs = stmt.executeQuery()) {
+				Map<String, String> info = new HashMap<>();
 				if (rs.next()) {
-					Map<String, String> info = new HashMap<>();
 					info.put("studentNumber", rs.getString("student_number"));
 					info.put("firstName", rs.getString("firstname"));
 					info.put("lastName", rs.getString("lastname"));
-					return info;
-				} else {
-					System.out.println("no resultset!");
-					throw new DataAccessException("Student number: " + id + " does not exist");
 				}
+				return info;
 			}
 		} catch (SQLException e) {
 			System.out.println("sql exception!" + e.getMessage());

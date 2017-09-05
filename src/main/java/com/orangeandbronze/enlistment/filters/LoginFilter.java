@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebFilter({ "/login" })
-public class LoginLogout implements Filter {
+@WebFilter("/login.jsp")
+public class LoginFilter implements Filter {
 	private final static String STUDENT_NUMBER = "studentNumber";
 	private final static String FIRST_NAME = "firstName";
 	private final static String LAST_NAME = "lastName";
@@ -29,10 +29,8 @@ public class LoginLogout implements Filter {
 			String firstNameAttr = (String) request.getAttribute(FIRST_NAME);
 			String lastNameAttr = (String) request.getAttribute(LAST_NAME);
 			if (studentNumberParam == null) { // go to login page
-				((HttpServletRequest) request).getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
-			} else {
-				((HttpServletResponse) response).sendRedirect("fa");
-			}
+				((HttpServletRequest) request).getRequestDispatcher("login.jsp").forward(request, response);
+			} 
 		}
 		
 		chain.doFilter(request, response);
