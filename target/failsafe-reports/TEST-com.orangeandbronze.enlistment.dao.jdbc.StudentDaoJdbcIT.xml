@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.orangeandbronze.enlistment.dao.jdbc.StudentDaoJdbcIT" time="3.284" tests="1" errors="1" skipped="0" failures="0">
+<testsuite name="com.orangeandbronze.enlistment.dao.jdbc.StudentDaoJdbcIT" time="0.87" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/amd64"/>
@@ -24,7 +24,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="os.name" value="Linux"/>
-    <property name="classworlds.conf" value="/home/training/Documents/workspace-sts-3.9.0.RELEASE/.metadata/.plugins/org.eclipse.m2e.launching/launches/m2conf4140196443127603422.tmp"/>
+    <property name="classworlds.conf" value="/home/training/Documents/workspace-sts-3.9.0.RELEASE/.metadata/.plugins/org.eclipse.m2e.launching/launches/m2conf102889857932928537.tmp"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
     <property name="java.library.path" value="/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -59,11 +59,6 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase name="findStudentWithNoSections" classname="com.orangeandbronze.enlistment.dao.jdbc.StudentDaoJdbcIT" time="3.284">
-    <error type="java.lang.NullPointerException:">java.lang.NullPointerException: null
-	at com.orangeandbronze.enlistment.dao.jdbc.StudentDaoJdbcIT.findStudentWithNoSections(StudentDaoJdbcIT.java:44)
-</error>
-    <system-out><![CDATA[2017-09-04 12:54:34 WARN  AbstractTableMetaData:166 - Potential problem found: The configured data type factory 'class org.dbunit.dataset.datatype.DefaultDataTypeFactory' might cause problems with the current database 'PostgreSQL' (e.g. some datatypes may not be supported properly). In rare cases you might see this message because the list of supported database products is incomplete (list=[derby]). If so please request a java-class update via the forums.If you are using your own IDataTypeFactory extending DefaultDataTypeFactory, ensure that you override getValidDbProducts() to specify the supported database products.
-]]></system-out>
-  </testcase>
+  <testcase name="findStudentThatHasSections" classname="com.orangeandbronze.enlistment.dao.jdbc.StudentDaoJdbcIT" time="0.419"/>
+  <testcase name="findStudentWithNoSections" classname="com.orangeandbronze.enlistment.dao.jdbc.StudentDaoJdbcIT" time="0.451"/>
 </testsuite>

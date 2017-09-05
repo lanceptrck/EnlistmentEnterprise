@@ -1,5 +1,7 @@
 /home/training/Desktop/EnlistmentEnterprise/src/test/java/com/orangeandbronze/enlistment/service/EnlistServiceIT.java
 /home/training/Desktop/EnlistmentEnterprise/src/test/java/com/orangeandbronze/enlistment/domain/StudentTest.java
 /home/training/Desktop/EnlistmentEnterprise/src/test/java/com/orangeandbronze/enlistment/domain/ScheduleTest.java
+/home/training/Desktop/EnlistmentEnterprise/src/test/java/com/orangeandbronze/enlistment/dao/jdbc/SectionDaoJdbcIT.java
+/home/training/Desktop/EnlistmentEnterprise/src/test/java/com/orangeandbronze/enlistment/dao/jdbc/EnlistmentDaoJdbcIT.java
 /home/training/Desktop/EnlistmentEnterprise/src/test/java/com/orangeandbronze/enlistment/dao/jdbc/StudentDaoJdbcIT.java
 /home/training/Desktop/EnlistmentEnterprise/src/test/java/com/orangeandbronze/enlistment/service/EnlistServiceTest.java

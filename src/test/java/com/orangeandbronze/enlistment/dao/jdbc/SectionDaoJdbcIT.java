@@ -147,6 +147,7 @@ public class SectionDaoJdbcIT {
 		assertEquals(expectedSections, actual);
 	}
 
+	@Ignore
 	@Test
 	public void createSection() {
 		Section sectionToBeCreated = new Section("ADDITIONALSECTION", new Subject("MATH11"),

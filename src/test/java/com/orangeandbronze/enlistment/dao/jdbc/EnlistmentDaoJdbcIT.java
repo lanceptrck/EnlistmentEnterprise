@@ -20,6 +20,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.orangeandbronze.enlistment.dao.EnlistmentsDAO;
+import com.orangeandbronze.enlistment.dao.SectionDAO;
 import com.orangeandbronze.enlistment.dao.StudentDAO;
 import com.orangeandbronze.enlistment.domain.Room;
 import com.orangeandbronze.enlistment.domain.Schedule;
@@ -88,5 +89,48 @@ public class EnlistmentDaoJdbcIT {
 				fail("Error deleting student");
 			}
 		}
+	}
+
+	@Test
+	public void simultaneousCreate() throws Exception {
+		SectionDAO sectionDao = new SectionDaoJdbc(ds);
+		EnlistmentsDAO enlistmentDao = new EnlistmentDaoJdbc(ds);
+
+		Student student1 = new Student(1);
+		Student student2 = new Student(2);
+		Thread thread1 = new Thread() {
+			public void run() {
+				Section section = sectionDao.findBy("CAPACITY1"); // capacity 1
+				student1.enlist(section);
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				enlistmentDao.create(student1, section);
+			}
+		};
+
+		Thread thread2 = new Thread() {
+			public void run() {
+				Section section = sectionDao.findBy("CAPACITY1"); // capacity 1
+				student2.enlist(section);
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				enlistmentDao.create(student2, section);
+			}
+		};
+		thread1.start();
+		thread2.start();
+		thread1.join();
+		thread2.join();
+
+		String sql = "SELECT COUNT(*) FROM enlistments " + " WHERE section_id = 'CAPACITY1'";
+		ResultSet rs = ds.getConnection().prepareStatement(sql).executeQuery();
+		rs.next();
+		assertEquals(1, rs.getInt(1));
 	}
 }
