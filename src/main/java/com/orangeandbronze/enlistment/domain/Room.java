@@ -11,6 +11,10 @@ public class Room {
 	private final Integer capacity;
 	private final Collection<Section> sections = new HashSet<>();
 	private final Integer version;
+	
+	public static final String ROOM_NAME = "room_name";
+	public static final String CAPACITY = "capacity";
+	
 
 	public Room(String roomName, int capacity, Collection<Section> sections, 
 			Integer version) {

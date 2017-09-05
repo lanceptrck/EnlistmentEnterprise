@@ -8,6 +8,10 @@ public class Faculty {
 
 	public static final Faculty TBA = new Faculty(0);
 
+	public static final String LAST_NAME = "lastname";
+	public static final String FIRST_NAME = "firstname";
+	public static final String FACULTY_NUMBER = "faculty_number";
+
 	private final Integer facultyNumber;
 	private String firstname = "";
 	private String lastname = "";

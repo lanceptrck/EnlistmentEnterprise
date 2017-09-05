@@ -3,6 +3,8 @@ package com.orangeandbronze.enlistment.domain;
 public class Subject {
 
 	public static final Subject NONE = new Subject("NONE");
+	
+	public static final String SUBJECT_ID = "subject_id";
 
 	private final String subjectId;
 

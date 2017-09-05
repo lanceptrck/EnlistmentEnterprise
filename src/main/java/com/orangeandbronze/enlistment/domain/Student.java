@@ -14,6 +14,11 @@ public class Student {
 	private String firstname = "";
 	private String lastname = "";
 	private final Collection<Section> sections = new HashSet<>();
+	
+	public static final String STUDENT_NUMBER = "student_number";
+	public static final String FIRST_NAME = "firstname";
+	public static final String LAST_NAME = "lastname";
+	public static final String SECTIONS = "sections";
 
 	public Student(int studentNumber) {
 		this(studentNumber, "", "", Collections.emptyList());

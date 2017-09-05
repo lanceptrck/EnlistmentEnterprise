@@ -24,10 +24,10 @@ import com.orangeandbronze.enlistment.domain.Schedule;
 import com.orangeandbronze.enlistment.domain.Section;
 import com.orangeandbronze.enlistment.domain.Student;
 import com.orangeandbronze.enlistment.domain.Subject;
+import com.orangeandbronze.enlistment.utils.SQLUtil;
 
 public class StudentDaoJdbc implements StudentDAO {
 	private final DataSource dataSource;
-	private final static Map<String, String> sqlCache = new HashMap<>();
 
 	public StudentDaoJdbc(DataSource dataSource) {
 		this.dataSource = dataSource;
@@ -42,8 +42,8 @@ public class StudentDaoJdbc implements StudentDAO {
 
 			try (ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
-					String firstName = rs.getString("firstname");
-					String lastName = rs.getString("lastname");
+					String firstName = rs.getString(Student.FIRST_NAME);
+					String lastName = rs.getString(Student.LAST_NAME);
 					student = new Student(studentNumber, firstName, lastName);
 				}
 			}
@@ -64,7 +64,8 @@ public class StudentDaoJdbc implements StudentDAO {
 	@Override
 	public Student findWithSectionsBy(int studentNumber) {
 		try (Connection conn = dataSource.getConnection();
-				PreparedStatement stmt = conn.prepareStatement(getSql("FindStudentsByStudentNo.sql"))) {
+				PreparedStatement stmt = conn
+						.prepareStatement(SQLUtil.getInstance().getSql("FindStudentsByStudentNo.sql"))) {
 			stmt.setInt(1, studentNumber);
 			boolean found = false;
 			Collection<Section> sections = new ArrayList<>();
@@ -73,8 +74,11 @@ public class StudentDaoJdbc implements StudentDAO {
 					if (!found) {
 						found = true;
 					}
-					if (!StringUtils.isBlank(rs.getString("section_id"))) {
-						sections.add(new Section(rs.getString("section_id"), Subject.NONE, Schedule.TBA, Room.TBA));
+					if (!StringUtils.isBlank(rs.getString(Section.SECTION_ID))) {
+						sections.add(new Section(rs.getString(Section.SECTION_ID),
+								new Subject(rs.getString(Subject.SUBJECT_ID)),
+								Schedule.valueOf(rs.getString(Schedule.SCHEDULE)),
+								new Room(rs.getString(Room.ROOM_NAME), rs.getInt(Room.CAPACITY))));
 					}
 				}
 			}
@@ -83,24 +87,5 @@ public class StudentDaoJdbc implements StudentDAO {
 			throw new DataAccessException(
 					"Problem retrieving student data for student with student number " + studentNumber, e);
 		}
-	}
-
-	private String getSql(String sqlFile) {
-		if (!sqlCache.containsKey(sqlFile)) {
-			try (Reader reader = new BufferedReader(
-					new InputStreamReader(getClass().getClassLoader().getResourceAsStream(sqlFile)))) {
-				StringBuilder bldr = new StringBuilder();
-				int i = 0;
-				while ((i = reader.read()) > 0) {
-					bldr.append((char) i);
-				}
-				sqlCache.put(sqlFile, bldr.toString());
-				return bldr.toString();
-			} catch (IOException e) {
-				throw new DataAccessException("Problem while trying to read file '" + sqlFile + "' from classpath.", e);
-			}
-		}
-
-		return sqlCache.get(sqlFile);
 	}
 }

@@ -6,9 +6,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import javax.sql.DataSource;
+
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
@@ -20,27 +23,35 @@ import com.orangeandbronze.enlistment.dao.StudentDAO;
 import com.orangeandbronze.enlistment.domain.*;
 
 public class StudentDaoJdbcIT {
+	private DataSource ds;
+	Connection jdbcConnection;
+	private IDataSet dataSet;
+	FlatXmlDataSetBuilder builder;
+	IDatabaseConnection dbUnitConnection;
+	StudentDAO dao;
 
-	@Test
-	public void findStudentWithNoSections() throws Exception {
-		PGSimpleDataSource ds = new PGSimpleDataSource();
-		ds.setDatabaseName("enlistment");
-		ds.setUser("postgres");
-		ds.setPassword("password");
-		Connection jdbcConnection = ds.getConnection();
+	@Before
+	public void setUpDataset() throws Exception {
+		ds = DataSourceManager.getDataSource();
+		jdbcConnection = ds.getConnection();
 		jdbcConnection.createStatement().execute("SET CONSTRAINTS ALL DEFERRED");
-		IDatabaseConnection dbUnitConnection = new DatabaseConnection(jdbcConnection);
-		FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
+
+		builder = new FlatXmlDataSetBuilder();
+		dataSet = builder.build(getClass().getClassLoader().getResourceAsStream("DefaultDataset.xml"));
+		dbUnitConnection = new DatabaseConnection(jdbcConnection);
 		builder.setDtdMetadata(false);
-		IDataSet dataSet = builder.build(getClass().getClassLoader().getResourceAsStream("StudentNoSections.xml"));
+
+		dao = new StudentDaoJdbc(ds);
 
 		try {
 			DatabaseOperation.CLEAN_INSERT.execute(dbUnitConnection, dataSet);
 		} finally {
-			dbUnitConnection.close();
+			dbUnitConnection.close(); // don't forget to close the connection!
 		}
+	}
 
-		StudentDAO dao = new StudentDaoJdbc(ds);
+	@Test
+	public void findStudentWithNoSections() throws Exception {
 		Integer studentNumber = 1;
 		Student actualStudent = dao.findWithoutSectionsBy(studentNumber);
 		assertEquals(studentNumber, actualStudent.getStudentNumber());
@@ -50,31 +61,11 @@ public class StudentDaoJdbcIT {
 
 	@Test
 	public void findStudentThatHasSections() throws Exception {
-		PGSimpleDataSource ds = new PGSimpleDataSource();
-		ds.setDatabaseName("enlistment");
-		ds.setUser("postgres");
-		ds.setPassword("password");
-		Connection jdbcConnection = ds.getConnection();
-		jdbcConnection.createStatement().execute("SET CONSTRAINTS ALL DEFERRED;");
-		IDatabaseConnection dbUnitConnection = new DatabaseConnection(jdbcConnection);
-		FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
-		builder.setDtdMetadata(false);
-		IDataSet dataSet = builder.build(getClass().getClassLoader().getResourceAsStream("StudentHasSections.xml"));
-		try {
-			DatabaseOperation.CLEAN_INSERT.execute(dbUnitConnection, dataSet);
-		} finally {
-			dbUnitConnection.close(); // don't forget to close the connection!
-		}
-		
-		StudentDAO dao = new StudentDaoJdbc(ds); 
-		Student actualStudent = dao.findWithSectionsBy(1);
+		Student actualStudent = dao.findWithSectionsBy(3);
 		Collection<Section> actualSections = actualStudent.getSections();
-		
-		assertThat(actualSections,
-			       Matchers.containsInAnyOrder(new Section("MHX123", Subject.NONE,
-			             Schedule.TBA, Room.TBA),
-			       new Section("TFX555", Subject.NONE, Schedule.TBA, Room.TBA),
-			       new Section("MHW432", Subject.NONE, Schedule.TBA, Room.TBA)));
+
+		assertThat(actualSections, Matchers.containsInAnyOrder(new Section("HASSTUDENTS", new Subject("COM1"),
+				Schedule.valueOf("TF 11:30-13:00"), new Room("AVR1", 10))));
 	}
 
 }

@@ -11,6 +11,8 @@ public class Schedule {
 	private final Days days;
 	private final LocalTime start;
 	private final LocalTime end;
+	
+	public static final String SCHEDULE = "schedule";
 
 	private Schedule() {
 		days = null;
