@@ -1,7 +1,13 @@
 /*
  * 
  * TODO: Use Hamcrest to assert Class properties or assert manually. Do not override equals for every property
- * Don't separate field values (Constants)
+ * Don't separate field values (Constants).
+ * Instead of util classes. use abstractDAO. parent of each DAOJDBC.
+ * 
+ * getSql()
+ * Datasource
+ * most common behaviors of each DAO
+ * make most functionality of Dao into abstart methods
  * 
  * */
 
