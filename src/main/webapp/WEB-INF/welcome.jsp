@@ -17,9 +17,51 @@
 		</c:when>
 
 		<c:otherwise>
-			
+			<h3>Enlisted Sections</h3>
+			<table style="width: 100%">
+				<tr>
+					<th></th>
+					<th>Section ID</th>
+					<th>Subject Id</th>
+					<th>Schedule</th>
+					<th>Room</th>
+					<th>Professor</th>
+				</tr>
+				<c:forEach var="section" items="${sections }">
+					<tr>
+						<td><a href="cancel_enlistment/${section.sectionId }">Cancel</a></td>
+						<td>${section.sectionId }</td>
+						<td>${section.subjectId }</td>
+						<td>${section.schedule }</td>
+						<td>${section.roomName }</td>
+						<td>${section.faculty }</td>
+					</tr>
+				</c:forEach>
+			</table>
 		</c:otherwise>
 	</c:choose>
+
+	<h3>Available Sections</h3>
+	<table style="width: 100%">
+		<tr>
+			<th></th>
+			<th>Section ID</th>
+			<th>Subject Id</th>
+			<th>Schedule</th>
+			<th>Room</th>
+			<th>Professor</th>
+		</tr>
+		<c:forEach var="section" items="${availableSections }">
+			<tr>
+				<td><a href="enlist/${section.sectionId }"> Enlist</a></td>
+				<td>${section.sectionId }</td>
+				<td>${section.subjectId }</td>
+				<td>${section.schedule }</td>
+				<td>${section.roomName }</td>
+				<td>${section.faculty }</td>
+			</tr>
+		</c:forEach>
+	</table>
 
 	<%@include file="/WEB-INF/footer.jsp"%>
 </body>

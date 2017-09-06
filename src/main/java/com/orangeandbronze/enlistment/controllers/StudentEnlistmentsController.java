@@ -25,15 +25,21 @@ public class StudentEnlistmentsController extends HttpServlet {
 		service = (SectionService) getServletContext().getAttribute("sectionService");
 	}
 
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doPost(req, resp);
+	}
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = ((HttpServletRequest) request).getSession();
 		int studentNumber = Integer.valueOf((String) session.getAttribute("studentNumber"));
 
 		Collection<SectionInfo> sections = service.findSectionByStudentNumber(studentNumber);
-
+		Collection<SectionInfo> availableSections = service.findSectionNotEnlistedByStudent(studentNumber);
+		availableSections.forEach(section -> System.out.println(section));
 		request.setAttribute("sections", sections);
-
+		request.setAttribute("availableSections", availableSections);
 		request.getRequestDispatcher("/WEB-INF/welcome.jsp").forward(request, response);
 	}
 

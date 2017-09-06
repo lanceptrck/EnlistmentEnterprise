@@ -38,7 +38,7 @@ public class Section {
 		this.sectionId = sectionId;
 		this.schedule = schedule;
 		this.subject = subject;
-		if (!room.TBA.equals(room)) {
+		if (!Room.TBA.equals(room)) {
 			this.room = room;
 			room.addSection(this);
 		}

@@ -20,4 +20,15 @@ public class SectionService {
 		sections.forEach(section -> studentSections.add(new SectionInfo(section)));
 		return studentSections;
 	}
+
+	public Collection<SectionInfo> findSectionNotEnlistedByStudent(int studentNumber) {
+		Collection<Section> sections = sectionDao.findByNotStudentNo(studentNumber);
+		Collection<SectionInfo> studentAvailableSections = new ArrayList<>();
+		sections.forEach(section -> studentAvailableSections.add(new SectionInfo(section)));
+		return studentAvailableSections;
+	}
+
+	public void create(Section section) {
+		sectionDao.create(section);
+	}
 }

@@ -13,10 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.orangeandbronze.enlistment.service.EnlistService;
 
-@WebServlet("/enlist")
+@WebServlet({ "/enlist/*", "/cancel_enlistment/*" })
 public class EnlistmentController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private EnlistService service;
+
+	private static final String ENLIST = "/enlist";
+	private static final String CANCEL_ENLIST = "/cancel_enlistment";
 
 	@Override
 	public void init() throws ServletException {
@@ -24,17 +27,27 @@ public class EnlistmentController extends HttpServlet {
 		service = (EnlistService) getServletContext().getAttribute("enlistService");
 	}
 
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doPost(req, resp);
+	}
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String[] sectionChecked = request.getParameterValues("section");
+		String sectionId = request.getPathInfo().substring(1);
+		int studentNumber = Integer.valueOf((String) request.getSession().getAttribute("studentNumber"));
 
-		PrintWriter out = response.getWriter();
-		out.println("<h1>Your Enlisted Sections:</h1>");
-		out.println("<ol>");
-		for (String section : sectionChecked) {
-			out.println("<li>" + section + "</li>");
+		switch (request.getServletPath()) {
+		case ENLIST:
+			service.enlist(studentNumber, sectionId);
+			break;
+		case CANCEL_ENLIST:
+			service.cancel(studentNumber, sectionId);
+			break;
 		}
-		out.println("</ol>");
+		response.sendRedirect("/enlistment/get_student_enlistments");
+		// request.getRequestDispatcher("get_student_enlistments").forward(request,
+		// response);
 	}
 
 }

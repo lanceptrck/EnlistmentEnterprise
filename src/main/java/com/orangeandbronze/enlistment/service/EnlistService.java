@@ -11,8 +11,7 @@ public class EnlistService {
 	private StudentDAO studentDao;
 	private EnlistmentsDAO enlistmentsDao;
 
-	public EnlistService(SectionDAO sectionDao, StudentDAO studentDao,
-			EnlistmentsDAO enlistmentsDao) {
+	public EnlistService(SectionDAO sectionDao, StudentDAO studentDao, EnlistmentsDAO enlistmentsDao) {
 		this.sectionDao = sectionDao;
 		this.studentDao = studentDao;
 		this.enlistmentsDao = enlistmentsDao;
@@ -21,11 +20,16 @@ public class EnlistService {
 	public void enlist(int studentNo, String sectionId) {
 		Student student = studentDao.findWithSectionsBy(studentNo);
 		Section section = sectionDao.findBy(sectionId);
+
 		student.enlist(section);
 		enlistmentsDao.create(student, section);
 	}
 
 	public void cancel(int studentNo, String sectionId) {
+		Student student = studentDao.findWithSectionsBy(studentNo);
+		Section section = sectionDao.findBy(sectionId);
+
+		student.cancel(section);
 		enlistmentsDao.delete(studentNo, sectionId);
 	}
 
@@ -38,8 +42,7 @@ public class EnlistService {
 		return sectionInfos;
 	}
 
-	public Collection<SectionInfo> getSectionsAvailableForStudent(
-			Integer studentNo) {
+	public Collection<SectionInfo> getSectionsAvailableForStudent(Integer studentNo) {
 		notNull(studentNo);
 		Collection<Section> sections = sectionDao.findByNotStudentNo(studentNo);
 		Collection<SectionInfo> sectionInfos = new ArrayList<>();

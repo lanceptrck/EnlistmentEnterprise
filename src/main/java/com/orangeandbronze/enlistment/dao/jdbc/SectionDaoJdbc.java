@@ -132,29 +132,18 @@ public class SectionDaoJdbc implements SectionDAO {
 
 	@Override
 	public void create(Section section) {
-		// try (Connection conn = dataSource.getConnection();
-		// PreparedStatement stmt = conn.prepareStatement(
-		// SQLUtil.getInstance().getSql("CreateSection.sql"));) {
-		// stmt.setString(1, section.getSectionId());
-		// stmt.setString(2, section.getSubject().getSubjectId());
-		// stmt.setString(3, section.getSchedule().toString());
-		// stmt.setString(4, section.getRoom().getName());
-		// stmt.setInt(5, section.getFaculty().getFacultyNumber());
-		// stmt.setString(6, section.getSectionId());
-		// stmt.setString(7, section.getSectionId());
-		// try (ResultSet rs = stmt.executeQuery()) {
-		// Collection<Section> sections = new ArrayList<>();
-		// Section section = Section.NONE;
-		// while (rs.next()) {
-		// section = new Section(rs);
-		// sections.add(section);
-		// }
-		// return sections;
-		// }
-		// } catch (SQLException e) {
-		// throw new DataAccessException("Problem retrieving sections not with student
-		// with SN# " + studentNumber, e);
-		// }
+		try (Connection conn = dataSource.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(SQLUtil.getInstance().getSql("CreateSection.sql"));) {
+			stmt.setString(1, section.getSectionId());
+			stmt.setString(2, section.getSubject().getSubjectId());
+			stmt.setString(3, section.getSchedule().toString());
+			stmt.setString(4, section.getRoom().getName());
+			stmt.setInt(5, section.getFaculty().getFacultyNumber());
+			stmt.setInt(6, 0);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new DataAccessException("Problem creating section with section id: " + section.getSectionId());
+		}
 	}
 
 }

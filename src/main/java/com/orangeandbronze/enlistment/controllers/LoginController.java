@@ -32,19 +32,35 @@ public class LoginController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		int id = Integer.valueOf(req.getParameter("student_number"));
-
+		String isAdmin = (String) req.getParameter("isAdmin");
 		HttpSession session = ((HttpServletRequest) req).getSession();
-		Map<String, String> studentInfo = (HashMap<String, String>) service.login(id);
+		Map<String, String> userInfo;
 
-		if (!studentInfo.isEmpty()) {
-			session.setAttribute("studentNumber", studentInfo.get("studentNumber"));
-			session.setAttribute("lastName", studentInfo.get("lastName"));
-			session.setAttribute("firstName", studentInfo.get("firstName"));
-			req.getRequestDispatcher("get_student_enlistments").forward(req, resp);
+		if (isAdmin != null) {
+			userInfo = (HashMap<String, String>) service.loginAdmin(id);
+			if (!userInfo.isEmpty()) {
+				setSession(session, userInfo);
+				resp.sendRedirect("admin_dashboard");
+			} else {
+				req.setAttribute("noIdFound", "Admin ID does not exist");
+				req.getRequestDispatcher("login.jsp").forward(req, resp);
+			}
 		} else {
-			req.setAttribute("noIdFound", true);
-			req.getRequestDispatcher("login.jsp").forward(req, resp);
+			userInfo = (HashMap<String, String>) service.login(id);
+			if (!userInfo.isEmpty()) {
+				setSession(session, userInfo);
+				req.getRequestDispatcher("get_student_enlistments").forward(req, resp);
+			} else {
+				req.setAttribute("noIdFound", "Student Number does not exist");
+				req.getRequestDispatcher("login.jsp").forward(req, resp);
+			}
 		}
 
+	}
+
+	private void setSession(HttpSession session, Map<String, String> userInfo) {
+		session.setAttribute("studentNumber", userInfo.get("studentNumber"));
+		session.setAttribute("lastName", userInfo.get("lastName"));
+		session.setAttribute("firstName", userInfo.get("firstName"));
 	}
 }

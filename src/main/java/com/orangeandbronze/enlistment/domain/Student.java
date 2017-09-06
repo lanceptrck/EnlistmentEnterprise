@@ -48,6 +48,10 @@ public class Student {
 	}
 
 	public void enlist(Section newSection) {
+		System.out.println("Student.enlist()" + newSection);
+		System.out.println("Student.enlist()" + newSection.getStudents().size());
+		System.out.println("Student.enlist()" + newSection.getRoom().getCapacity());
+		
 		notNull(newSection);
 		validateSectionConflict(newSection);
 		newSection.validateSectionCanAccommodateEnlistment();

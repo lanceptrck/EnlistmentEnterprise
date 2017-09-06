@@ -3,7 +3,8 @@ Each student logs in via his/her student number. No need for password.
 System should show student's full name & student number.
 Show success or error messages.
 For example, if student tries to enlist in section that has schedule conflict with his other sections, system should tell the student that's the reason why enlistment failed.
-Refactor.
+
+.
 
 
 Administrator logs in via his/her Admin ID (positive integer). No need for password.
