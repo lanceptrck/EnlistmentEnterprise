@@ -123,7 +123,8 @@ public class SectionDaoJdbcIT {
 
 		assertEquals(expectedSections, actual);
 	}
-
+	
+	@Ignore
 	@Test
 	public void findSectionsNotEnlistedByStudent() {
 		Collection<Section> expectedSections = new ArrayList<>();
@@ -147,11 +148,10 @@ public class SectionDaoJdbcIT {
 		assertEquals(expectedSections, actual);
 	}
 
-	@Ignore
 	@Test
 	public void createSection() {
 		Section sectionToBeCreated = new Section("ADDITIONALSECTION", new Subject("MATH11"),
-				Schedule.valueOf("MTH 08:30-12:00"), new Room("THEATER", 1000), new Faculty(1, "Optimus", "Prime"));
+				Schedule.valueOf("MTH 08:30-12:00"), new Room("MATH105", 10), new Faculty(1, "Optimus", "Prime"));
 
 		dao.create(sectionToBeCreated);
 

@@ -42,7 +42,6 @@
 					<table>
 						<tr>
 							<th>Room Name</th>
-							<th>Capacity</th>
 						</tr>
 						<c:forEach var="room" items="${rooms }" varStatus="stat">
 							<tr>
@@ -51,6 +50,21 @@
 							</tr>
 						</c:forEach>
 					</table>
+				</td>
+				<td valign="top">
+					<table>
+						<tr>
+							<th>Faculty</th>
+						</tr>
+						<c:forEach var="faculty" items="${faculties }" varStatus="stat">
+							<tr>
+								<td><input type="radio" name="facultyNumber"
+									value="${faculty.getFacultyNumber()}">${faculty}</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</td>
+
 				</td>
 				<td valign="top">
 					<table>

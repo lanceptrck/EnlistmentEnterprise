@@ -30,7 +30,7 @@ public class EnlistServiceIT {
 	private static SectionDAO sectionDao;
 	private static StudentDAO studentDao;
 	private static EnlistmentsDAO enlistmentsDao;
-	private static DataSource dataSource = DataSourceManager.getDataSource();;
+	private static DataSource dataSource = DataSourceManager.getDataSource();
 
 	@Before
 	public void cleanInsert() throws Exception {
@@ -59,29 +59,26 @@ public class EnlistServiceIT {
 		return new DatabaseConnection(jdbcConnection);
 	}
 
-	@Ignore
 	@Test
 	public void enlistFirstSection() throws Exception {
 		final int STUDENT_NO = 1;
 		final String SECTION_ID = "MHX123";
 		service.enlist(STUDENT_NO, SECTION_ID);
 		ITable table = getIDatabaseConnection().createQueryTable("result",
-				"select section_id from student_enlisted_sections where student_number = " + STUDENT_NO);
+				"select section_id from enlistments where student_number = " + STUDENT_NO);
 		assertEquals(SECTION_ID, table.getValue(0, "section_id"));
 	}
 
-	@Ignore
 	@Test
 	public void cancelSection() throws Exception {
 		final int STUDENT_NO = 4;
 		final String SECTION_ID = "HASSTUDENTS";
 		service.cancel(STUDENT_NO, SECTION_ID);
 		ITable table = getIDatabaseConnection().createQueryTable("result",
-				"select section_id from student_enlisted_sections where SECTION_ID = '" + SECTION_ID + "'");
+				"select section_id from enlistments where SECTION_ID = '" + SECTION_ID + "'");
 		assertEquals(1, table.getRowCount());
 	}
 
-	@Ignore
 	@Test(expected = ScheduleConflictException.class)
 	public void enlistSectionSameScheduleAsCurrentSection() throws Exception {
 		final int STUDENT_NO = 1;
@@ -91,7 +88,6 @@ public class EnlistServiceIT {
 		service.enlist(STUDENT_NO, SECTION_ID_2);
 	}
 
-	@Ignore
 	@Test(expected = SameSubjectException.class)
 	public void enlistSectionSameSubject() throws Exception {
 		final int STUDENT_NO = 1;
@@ -101,7 +97,6 @@ public class EnlistServiceIT {
 		service.enlist(STUDENT_NO, SECTION_ID_2);
 	}
 
-	@Ignore
 	@Test
 	public void simultaneousEnlistment() throws Exception {
 		final int STUDENT_NO1 = 1;
@@ -121,7 +116,7 @@ public class EnlistServiceIT {
 		thread2.start();
 		thread1.join();
 		thread2.join();
-		String sql = "SELECT COUNT(*) FROM student_enlisted_sections WHERE section_id = '" + SEC_ID + "'";
+		String sql = "SELECT COUNT(*) FROM enlistments WHERE section_id = '" + SEC_ID + "'";
 		ResultSet rs = dataSource.getConnection().prepareStatement(sql).executeQuery();
 		rs.next();
 		assertEquals(1, rs.getInt(1));

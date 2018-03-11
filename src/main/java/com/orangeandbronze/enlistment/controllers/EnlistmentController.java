@@ -46,8 +46,7 @@ public class EnlistmentController extends HttpServlet {
 			break;
 		}
 		response.sendRedirect("/enlistment/get_student_enlistments");
-		// request.getRequestDispatcher("get_student_enlistments").forward(request,
-		// response);
+
 	}
 
 }

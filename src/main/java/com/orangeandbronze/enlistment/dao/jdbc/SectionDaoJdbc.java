@@ -132,18 +132,30 @@ public class SectionDaoJdbc implements SectionDAO {
 
 	@Override
 	public void create(Section section) {
-		try (Connection conn = dataSource.getConnection();
-				PreparedStatement stmt = conn.prepareStatement(SQLUtil.getInstance().getSql("CreateSection.sql"));) {
-			stmt.setString(1, section.getSectionId());
-			stmt.setString(2, section.getSubject().getSubjectId());
-			stmt.setString(3, section.getSchedule().toString());
-			stmt.setString(4, section.getRoom().getName());
-			stmt.setInt(5, section.getFaculty().getFacultyNumber());
-			stmt.setInt(6, 0);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			throw new DataAccessException("Problem creating section with section id: " + section.getSectionId());
-		}
+		try (Connection conn = dataSource.getConnection()) {
+	        conn.setAutoCommit(false);
+	        try (PreparedStatement stmt = conn.prepareStatement(
+					SQLUtil.getInstance().getSql("CreateSection.sql"));) {
+	            stmt.setString(1, section.getSectionId());
+	            stmt.setString(2, section.getSubject().getSubjectId());
+	            stmt.setString(3, section.getSchedule().toString());
+	            stmt.setString(4, section.getRoom().getName());
+	            stmt.setInt(5, section.getFaculty().getFacultyNumber());
+	            stmt.setInt(6, section.getVersion());
+	            if (stmt.executeUpdate() > 0) {
+	                conn.commit();
+	            } else {
+	                conn.rollback();
+	            }
+	        } catch (SQLException e) {
+	            conn.rollback();
+	            throw e;
+	        }
+	        conn.setAutoCommit(true);
+	    } catch (SQLException e) {
+	        throw new DataAccessException(
+	                "while inserting into create table for " + section,   e);
+	    }
 	}
 
 }

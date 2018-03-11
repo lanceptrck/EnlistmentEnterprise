@@ -23,6 +23,7 @@ import com.orangeandbronze.enlistment.dao.EnlistmentsDAO;
 import com.orangeandbronze.enlistment.dao.SectionDAO;
 import com.orangeandbronze.enlistment.dao.StudentDAO;
 import com.orangeandbronze.enlistment.domain.Room;
+import com.orangeandbronze.enlistment.domain.SameSubjectException;
 import com.orangeandbronze.enlistment.domain.Schedule;
 import com.orangeandbronze.enlistment.domain.Section;
 import com.orangeandbronze.enlistment.domain.Student;
@@ -34,9 +35,12 @@ public class EnlistmentDaoJdbcIT {
 	private IDataSet dataSet;
 	FlatXmlDataSetBuilder builder;
 	IDatabaseConnection dbUnitConnection;
+    private EnlistmentsDAO enlistmentDao;
+    private SectionDAO sectionDao;
+    private StudentDAO studentDao;
 
 	@Before
-	public void setUpDataset() throws Exception {
+	public void init() throws Exception {
 		ds = DataSourceManager.getDataSource();
 		jdbcConnection = ds.getConnection();
 		jdbcConnection.createStatement().execute("SET CONSTRAINTS ALL DEFERRED");
@@ -51,14 +55,48 @@ public class EnlistmentDaoJdbcIT {
 		} finally {
 			dbUnitConnection.close(); // don't forget to close the connection!
 		}
+		
+    	enlistmentDao = new EnlistmentDaoJdbc(ds);
+    	sectionDao = new SectionDaoJdbc(ds);
+    	studentDao = new StudentDaoJdbc(ds);
+	}
+	
+    @Test (expected = SameSubjectException.class)
+    public void createNewEnlistment_with_same_enrolled_subject() throws Exception {
+
+	    Student student = studentDao.findWithSectionsBy(3);
+	    Section section = sectionDao.findBy("MHY987");
+	    student.enlist(section);
+	    enlistmentDao.create(student, section);
+
+	}
+    
+    @Test
+    public void cancelEnlistment_happy_path() throws Exception {
+
+	    Student student = studentDao.findWithSectionsBy(3);
+	    Section section = sectionDao.findBy("HASSTUDENTS");
+
+	    student.cancel(section);
+	    enlistmentDao.delete(student.getStudentNumber(), section.getSectionId());
+	    
+		jdbcConnection = ds.getConnection();
+		PreparedStatement stmt = jdbcConnection.prepareStatement("SELECT COUNT(*) FROM enlistments where section_id = ?");
+		stmt.setString(1, "HASSTUDENTS");
+		try (ResultSet rs = stmt.executeQuery()) {
+			if (!rs.next()) {
+				fail("Error canceling enlistment for student "+student);
+			} else {
+		        assertEquals(1, rs.getInt(1)); // Before 2 students were enrolled, now we have only 1 which is Student number 4
+			}
+		}
 	}
 
 	@Test
 	public void enlistStudent() throws Exception {
-		EnlistmentsDAO dao = new EnlistmentDaoJdbc(ds);
 		Student student = new Student(1);
 		Section section = new Section("MHX123", Subject.NONE, Schedule.TBA, Room.TBA);
-		dao.create(student, section);
+		enlistmentDao.create(student, section);
 
 		jdbcConnection = ds.getConnection();
 		PreparedStatement stmt = jdbcConnection.prepareStatement("SELECT * FROM enlistments where student_number = ?");
@@ -75,8 +113,8 @@ public class EnlistmentDaoJdbcIT {
 
 	@Test
 	public void deleteStudent() throws Exception {
-		EnlistmentsDAO dao = new EnlistmentDaoJdbc(ds);
-		dao.delete(3, "HASSTUDENTS");
+		
+		enlistmentDao.delete(3, "HASSTUDENTS");
 
 		jdbcConnection = ds.getConnection();
 		PreparedStatement stmt = jdbcConnection
@@ -93,8 +131,7 @@ public class EnlistmentDaoJdbcIT {
 
 	@Test
 	public void simultaneousCreate() throws Exception {
-		SectionDAO sectionDao = new SectionDaoJdbc(ds);
-		EnlistmentsDAO enlistmentDao = new EnlistmentDaoJdbc(ds);
+
 
 		Student student1 = new Student(1);
 		Student student2 = new Student(2);

@@ -7,10 +7,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.orangeandbronze.enlistment.domain.Faculty;
 import com.orangeandbronze.enlistment.domain.Room;
 import com.orangeandbronze.enlistment.domain.Schedule;
 import com.orangeandbronze.enlistment.domain.Section;
 import com.orangeandbronze.enlistment.domain.Subject;
+import com.orangeandbronze.enlistment.service.AdminService;
 import com.orangeandbronze.enlistment.service.SectionService;
 
 /**
@@ -20,11 +22,13 @@ import com.orangeandbronze.enlistment.service.SectionService;
 public class CreateSectionController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private SectionService service;
+	private AdminService adminService;
 
 	@Override
 	public void init() throws ServletException {
 		super.init();
 		service = (SectionService) getServletContext().getAttribute("sectionService");
+		adminService = (AdminService) getServletContext().getAttribute("adminService");
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -32,8 +36,10 @@ public class CreateSectionController extends HttpServlet {
 		String sectionId = request.getParameter("sectionId");
 		String subjectId = request.getParameter("subjectId");
 		String roomName = request.getParameter("roomName");
+		String faculty = request.getParameter("facultyNumber");
 		String period = parsePeriod(request);
-		service.create(new Section(sectionId, new Subject(subjectId), Schedule.valueOf(period), new Room(roomName)));
+		service.create(new Section(sectionId, new Subject(subjectId), Schedule.valueOf(period), new Room(roomName)
+				, new Faculty(Integer.valueOf(faculty))));
 		response.sendRedirect("admin_dashboard");
 	}
 

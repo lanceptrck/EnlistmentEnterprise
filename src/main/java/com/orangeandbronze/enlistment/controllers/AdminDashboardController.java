@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.orangeandbronze.enlistment.domain.Faculty;
 import com.orangeandbronze.enlistment.domain.Room;
 import com.orangeandbronze.enlistment.domain.Section;
 import com.orangeandbronze.enlistment.domain.Subject;
@@ -38,9 +39,11 @@ public class AdminDashboardController extends HttpServlet {
 		Collection<Subject> subjects = service.getAllSubjects();
 		Collection<Room> rooms = service.getAllRooms();
 		Collection<SectionInfo> sections = service.getAllSections();
+		Collection<Faculty> faculties = service.getAllFaculties();
 		request.setAttribute("subjects", subjects);
 		request.setAttribute("rooms", rooms);
 		request.setAttribute("sections", sections);
+		request.setAttribute("faculties", faculties);
 		request.getRequestDispatcher("/WEB-INF/admin_dashboard.jsp").forward(request, response);
 	}
 

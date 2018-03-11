@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 import com.orangeandbronze.enlistment.dao.AdminDAO;
 import com.orangeandbronze.enlistment.dao.DataAccessException;
 import com.orangeandbronze.enlistment.domain.Admin;
+import com.orangeandbronze.enlistment.domain.Faculty;
 import com.orangeandbronze.enlistment.domain.Room;
 import com.orangeandbronze.enlistment.domain.Section;
 import com.orangeandbronze.enlistment.domain.Student;
@@ -97,6 +98,26 @@ public class AdminDaoJdbc implements AdminDAO {
 					sections.add(section);
 				}
 				return sections;
+			}
+		} catch (SQLException e) {
+			throw new DataAccessException("Problem retrieving all sections", e);
+		}
+	}
+
+	@Override
+	public Collection<Faculty> getAllFaculties() {
+		try (Connection conn = dataSource.getConnection();
+				PreparedStatement stmt = conn.prepareStatement(SQLUtil.getInstance().getSql("FindAllFaculties.sql"));) {
+			try (ResultSet rs = stmt.executeQuery()) {
+				Collection<Faculty> faculties = new ArrayList<>();
+				Faculty faculty = Faculty.TBA;
+				while (rs.next()) {
+					faculty = new Faculty(rs.getInt("faculty_number"),
+							rs.getString("firstname"),
+							rs.getString("lastname"));
+					faculties.add(faculty);
+				}
+				return faculties;
 			}
 		} catch (SQLException e) {
 			throw new DataAccessException("Problem retrieving all sections", e);

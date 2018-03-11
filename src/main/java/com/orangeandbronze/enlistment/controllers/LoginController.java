@@ -40,6 +40,7 @@ public class LoginController extends HttpServlet {
 			userInfo = (HashMap<String, String>) service.loginAdmin(id);
 			if (!userInfo.isEmpty()) {
 				setSession(session, userInfo);
+				session.setAttribute("isAdmin", true);
 				resp.sendRedirect("admin_dashboard");
 			} else {
 				req.setAttribute("noIdFound", "Admin ID does not exist");
