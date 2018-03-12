@@ -67,7 +67,7 @@ public class LoginServiceTest {
 	
 	@Test
 	public void findUserInfo() {
-		Map<String, String> userInfo = service.login(1);
+		Map<String, String> userInfo = service.loginAdmin(1);
 		System.out.println("UserINFO "+userInfo.get("studentNumber"));
 	}
 	

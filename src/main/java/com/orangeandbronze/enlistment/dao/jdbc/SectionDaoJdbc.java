@@ -29,9 +29,12 @@ import org.junit.Ignore;
 import com.orangeandbronze.enlistment.dao.DataAccessException;
 import com.orangeandbronze.enlistment.dao.SectionDAO;
 import com.orangeandbronze.enlistment.domain.Faculty;
+import com.orangeandbronze.enlistment.domain.FacultyScheduleConflictException;
 import com.orangeandbronze.enlistment.domain.Room;
+import com.orangeandbronze.enlistment.domain.RoomScheduleConflictException;
 import com.orangeandbronze.enlistment.domain.Schedule;
 import com.orangeandbronze.enlistment.domain.Section;
+import com.orangeandbronze.enlistment.domain.SectionCreationException;
 import com.orangeandbronze.enlistment.domain.Student;
 import com.orangeandbronze.enlistment.domain.Subject;
 import com.orangeandbronze.enlistment.utils.SQLUtil;
@@ -129,9 +132,70 @@ public class SectionDaoJdbc implements SectionDAO {
 			throw new DataAccessException("Problem retrieving sections not with student with SN# " + studentNumber, e);
 		}
 	}
+	
+	private boolean hasFacultyConflict(Section section) {
+		try (Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(
+            		SQLUtil.getInstance().getSql(("CountSectionByFacultyAndSchedule.sql")))) {
+			
+			stmt.setInt(1, section.getFaculty().getFacultyNumber());
+			stmt.setString(2, section.getSchedule().toString());
+			
+			try (ResultSet rs = stmt.executeQuery()) {
+				
+		        rs.next();
+		        
+		        if(rs.getInt(1) > 0)
+		        	return true;
+		        else 
+		        	return false;
+			}
+
+		} catch (SQLException e) {
+			throw new RuntimeException("Invalid sql statement"+ e);
+		}
+	}
+	
+	private boolean hasRoomScheduleConflict(Section section) {
+		try (Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(
+            		SQLUtil.getInstance().getSql(("CountSectionByRoomAndSchedule.sql")))) {
+			
+			stmt.setString(1, section.getSchedule().toString());
+			stmt.setString(2, section.getRoom().getName());
+			
+			try (ResultSet rs = stmt.executeQuery()) {
+				
+		        rs.next();
+		        
+		        if(rs.getInt(1) > 0)
+		        	return true;
+		        else 
+		        	return false;
+			}
+
+		} catch (SQLException e) {
+			throw new RuntimeException("Invalid sql statement"+ e);
+		}
+	}
 
 	@Override
 	public void create(Section section) {
+		
+		if(findBy(section.getSectionId()) != Section.NONE)
+		{
+			throw new SectionCreationException("Section ID:["+section.getSectionId()+"] exists already!");
+		}
+		
+		if(hasFacultyConflict(section)) {
+			throw new FacultyScheduleConflictException("Faculty is already teaching at "+section.getSchedule());
+		}
+		
+		if(hasRoomScheduleConflict(section)) {
+			throw new RoomScheduleConflictException("Section "+section.getSectionId()+"is in conflict with an existing section at room "
+					+ section.getRoom().getName());
+		}
+		
 		try (Connection conn = dataSource.getConnection()) {
 	        conn.setAutoCommit(false);
 	        try (PreparedStatement stmt = conn.prepareStatement(

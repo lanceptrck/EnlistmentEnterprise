@@ -8,7 +8,7 @@
 <% }%> 
 <form action="login" method="post">
 <strong>Enter Your Username: </strong>
-<input type="text" name="student_number"/><br>
+<input type="text" name="studentNumber"/><br>
 <input type="checkbox" name="isAdmin" value="admin"/> Log in as admin<br>
 <input	type="submit" value="Submit" />
 </form>

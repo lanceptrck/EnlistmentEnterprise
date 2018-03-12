@@ -31,7 +31,7 @@ public class LoginController extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		int id = Integer.valueOf(req.getParameter("student_number"));
+		int id = Integer.valueOf(req.getParameter("studentNumber"));
 		String isAdmin = (String) req.getParameter("isAdmin");
 		HttpSession session = ((HttpServletRequest) req).getSession();
 		Map<String, String> userInfo;
@@ -50,7 +50,9 @@ public class LoginController extends HttpServlet {
 			userInfo = (HashMap<String, String>) service.login(id);
 			if (!userInfo.isEmpty()) {
 				setSession(session, userInfo);
-				req.getRequestDispatcher("get_student_enlistments").forward(req, resp);
+				//session.setAttribute("studentNumber", userInfo.get("studentNumber"));
+				session.setAttribute("isAdmin", false);
+				resp.sendRedirect("get_student_enlistments");
 			} else {
 				req.setAttribute("noIdFound", "Student Number does not exist");
 				req.getRequestDispatcher("login.jsp").forward(req, resp);

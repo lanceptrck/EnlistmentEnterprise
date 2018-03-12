@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -23,7 +24,7 @@ import com.orangeandbronze.enlistment.dao.StudentDAO;
 import com.orangeandbronze.enlistment.domain.*;
 
 public class StudentDaoJdbcIT {
-	private DataSource ds;
+	private DataSource dataSource;
 	Connection jdbcConnection;
 	private IDataSet dataSet;
 	FlatXmlDataSetBuilder builder;
@@ -31,9 +32,9 @@ public class StudentDaoJdbcIT {
 	StudentDAO dao;
 
 	@Before
-	public void setUpDataset() throws Exception {
-		ds = DataSourceManager.getDataSource();
-		jdbcConnection = ds.getConnection();
+	public void init() throws Exception {
+		dataSource = DataSourceManager.getDataSource();
+		jdbcConnection = dataSource.getConnection();
 		jdbcConnection.createStatement().execute("SET CONSTRAINTS ALL DEFERRED");
 
 		builder = new FlatXmlDataSetBuilder();
@@ -41,7 +42,7 @@ public class StudentDaoJdbcIT {
 		dbUnitConnection = new DatabaseConnection(jdbcConnection);
 		builder.setDtdMetadata(false);
 
-		dao = new StudentDaoJdbc(ds);
+		dao = new StudentDaoJdbc(dataSource);
 
 		try {
 			DatabaseOperation.CLEAN_INSERT.execute(dbUnitConnection, dataSet);
@@ -66,6 +67,12 @@ public class StudentDaoJdbcIT {
 
 		assertThat(actualSections, Matchers.containsInAnyOrder(new Section("HASSTUDENTS", new Subject("COM1"),
 				Schedule.valueOf("TF 11:30-13:00"), new Room("AVR1", 10))));
+	}
+	
+	@Test
+	public void findUserInfoById_Mickey_Mouse() throws Exception {
+		  Map<String, String> userInfo = dao.findUserInfobById(1);
+		  assertEquals(userInfo.get("firstName"), "Mickey");
 	}
 
 }

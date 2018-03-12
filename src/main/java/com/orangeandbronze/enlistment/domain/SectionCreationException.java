@@ -5,7 +5,7 @@ public class SectionCreationException extends RuntimeException {
 	SectionCreationException() {
 	}
 
-	SectionCreationException(String message) {
+	public SectionCreationException(String message) {
 		super(message);
 	}
 

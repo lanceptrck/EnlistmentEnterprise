@@ -26,7 +26,7 @@ public class LoginFilter implements Filter {
 		HttpSession session = ((HttpServletRequest) request).getSession();
 		String usernameSessionAttr = (String) session.getAttribute(STUDENT_NUMBER);
 		if (usernameSessionAttr == null) { // not logged-in
-			String studentNumberParam = request.getParameter(STUDENT_NUMBER);
+			String studentNumberParam = (String) request.getAttribute(STUDENT_NUMBER);
 			String firstNameAttr = (String) request.getAttribute(FIRST_NAME);
 			String lastNameAttr = (String) request.getAttribute(LAST_NAME);
 

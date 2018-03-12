@@ -30,7 +30,7 @@ import com.orangeandbronze.enlistment.domain.Student;
 import com.orangeandbronze.enlistment.domain.Subject;
 
 public class EnlistmentDaoJdbcIT {
-	private DataSource ds;
+	private DataSource dataSource;
 	Connection jdbcConnection;
 	private IDataSet dataSet;
 	FlatXmlDataSetBuilder builder;
@@ -41,8 +41,8 @@ public class EnlistmentDaoJdbcIT {
 
 	@Before
 	public void init() throws Exception {
-		ds = DataSourceManager.getDataSource();
-		jdbcConnection = ds.getConnection();
+		dataSource = DataSourceManager.getDataSource();
+		jdbcConnection = dataSource.getConnection();
 		jdbcConnection.createStatement().execute("SET CONSTRAINTS ALL DEFERRED");
 
 		builder = new FlatXmlDataSetBuilder();
@@ -56,9 +56,9 @@ public class EnlistmentDaoJdbcIT {
 			dbUnitConnection.close(); // don't forget to close the connection!
 		}
 		
-    	enlistmentDao = new EnlistmentDaoJdbc(ds);
-    	sectionDao = new SectionDaoJdbc(ds);
-    	studentDao = new StudentDaoJdbc(ds);
+    	enlistmentDao = new EnlistmentDaoJdbc(dataSource);
+    	sectionDao = new SectionDaoJdbc(dataSource);
+    	studentDao = new StudentDaoJdbc(dataSource);
 	}
 	
     @Test (expected = SameSubjectException.class)
@@ -80,7 +80,7 @@ public class EnlistmentDaoJdbcIT {
 	    student.cancel(section);
 	    enlistmentDao.delete(student.getStudentNumber(), section.getSectionId());
 	    
-		jdbcConnection = ds.getConnection();
+		jdbcConnection = dataSource.getConnection();
 		PreparedStatement stmt = jdbcConnection.prepareStatement("SELECT COUNT(*) FROM enlistments where section_id = ?");
 		stmt.setString(1, "HASSTUDENTS");
 		try (ResultSet rs = stmt.executeQuery()) {
@@ -98,7 +98,7 @@ public class EnlistmentDaoJdbcIT {
 		Section section = new Section("MHX123", Subject.NONE, Schedule.TBA, Room.TBA);
 		enlistmentDao.create(student, section);
 
-		jdbcConnection = ds.getConnection();
+		jdbcConnection = dataSource.getConnection();
 		PreparedStatement stmt = jdbcConnection.prepareStatement("SELECT * FROM enlistments where student_number = ?");
 		stmt.setInt(1, 1);
 		try (ResultSet rs = stmt.executeQuery()) {
@@ -116,7 +116,7 @@ public class EnlistmentDaoJdbcIT {
 		
 		enlistmentDao.delete(3, "HASSTUDENTS");
 
-		jdbcConnection = ds.getConnection();
+		jdbcConnection = dataSource.getConnection();
 		PreparedStatement stmt = jdbcConnection
 				.prepareStatement("SELECT * FROM enlistments where student_number = ?" + " AND section_id = ?");
 		stmt.setInt(1, 3);
@@ -166,7 +166,7 @@ public class EnlistmentDaoJdbcIT {
 		thread2.join();
 
 		String sql = "SELECT COUNT(*) FROM enlistments " + " WHERE section_id = 'CAPACITY1'";
-		ResultSet rs = ds.getConnection().prepareStatement(sql).executeQuery();
+		ResultSet rs = dataSource.getConnection().prepareStatement(sql).executeQuery();
 		rs.next();
 		assertEquals(1, rs.getInt(1));
 	}

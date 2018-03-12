@@ -14,6 +14,8 @@
 
 	<build>
 		<plugins>
+			
+            <!-- Compiler plugin sets Java source and compiled versions. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -23,6 +25,26 @@
 				</configuration>
 			</plugin>
 
+			<!-- Properties plugin allows retrieval of properties from external files. -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>src/main/resources/pg.datasource.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Run the web application in a Tomcat container. -->
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
@@ -33,11 +55,10 @@
 				</configuration>
 			</plugin>
 
-			<!-- The Failsafe plugin runs integration tests separately. -->
+			<!-- Failsafe plugin runs integration tests separately from unit tests. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.18.1</version>
 				<executions>
 					<execution>
 						<goals>
@@ -47,6 +68,19 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<!-- Flyway plugin performs database migrations. -->
+            
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>5.0.6</version>
+                <configuration>
+                    <url>jdbc:postgresql://localhost:5432/enlistment</url>
+                    <user>postgres</user>
+                    <password>password</password>
+                </configuration>
+            </plugin>
 
 		</plugins>
 	</build>
@@ -64,8 +98,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>2.9.0</version>
+			<artifactId>mockito-all</artifactId>
+			<version>2.0.2-beta</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -97,6 +131,11 @@
 			<version>1.7.21</version>
 		</dependency>
 		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>2.4.5</version>
+		</dependency>
+		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.4.1209</version>
@@ -110,7 +149,6 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>3.3.6</version>
-		</dependency>
-
+		</dependency>	
 	</dependencies>
 </project>

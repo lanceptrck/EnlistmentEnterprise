@@ -35,6 +35,5 @@ public class AdminService {
 	
 	public Collection<Faculty> getAllFaculties(){
 		return adminDao.getAllFaculties();
-		
 	}
 }

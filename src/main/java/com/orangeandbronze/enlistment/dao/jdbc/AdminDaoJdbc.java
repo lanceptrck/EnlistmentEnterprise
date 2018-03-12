@@ -49,12 +49,6 @@ public class AdminDaoJdbc implements AdminDAO {
 	}
 
 	@Override
-	public Map<String, String> findAdminInfoBy(int adminId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Collection<Subject> getAllSubjects() {
 		try (Connection conn = dataSource.getConnection();
 				PreparedStatement stmt = conn.prepareStatement("select * from subjects")) {

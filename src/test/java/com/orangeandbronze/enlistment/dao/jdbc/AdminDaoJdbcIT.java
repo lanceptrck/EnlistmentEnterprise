@@ -12,16 +12,16 @@ import org.dbunit.operation.DatabaseOperation;
 import org.junit.Before;
 
 public class AdminDaoJdbcIT {
-	private DataSource ds;
+	private DataSource dataSource;
 	Connection jdbcConnection;
 	private IDataSet dataSet;
 	FlatXmlDataSetBuilder builder;
 	IDatabaseConnection dbUnitConnection;
 
 	@Before
-	public void setUpDataset() throws Exception {
-		ds = DataSourceManager.getDataSource();
-		jdbcConnection = ds.getConnection();
+	public void init() throws Exception {
+		dataSource = DataSourceManager.getDataSource();
+		jdbcConnection = dataSource.getConnection();
 		jdbcConnection.createStatement().execute("SET CONSTRAINTS ALL DEFERRED");
 
 		builder = new FlatXmlDataSetBuilder();

@@ -37,7 +37,6 @@ public class StudentEnlistmentsController extends HttpServlet {
 
 		Collection<SectionInfo> sections = service.findSectionByStudentNumber(studentNumber);
 		Collection<SectionInfo> availableSections = service.findSectionNotEnlistedByStudent(studentNumber);
-		availableSections.forEach(section -> System.out.println(section));
 		request.setAttribute("sections", sections);
 		request.setAttribute("availableSections", availableSections);
 		request.getRequestDispatcher("/WEB-INF/welcome.jsp").forward(request, response);
