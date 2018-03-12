@@ -5,12 +5,12 @@
 * For example, if student tries to enlist in section that has schedule conflict with his other sections, system should tell the student that's the reason why enlistment failed.
 
 
-*Administrator logs in via his/her Admin ID (positive integer). No need for password.
-*Administrator sees lists of subjects, rooms, days & periods, as well as a list of existing sections.
-*Administrator creates a section by choosing a subject, room, days & periods, and by specifying a section ID.
+* Administrator logs in via his/her Admin ID (positive integer). No need for password.
+* Administrator sees lists of subjects, rooms, days & periods, as well as a list of existing sections.
+* Administrator creates a section by choosing a subject, room, days & periods, and by specifying a section ID.
 	+ If section creation is successful, system adds section to list of sections.
 	+ If section creation is unsuccessful, system stays/returns to same page and informs administrator why section creation failed.
-*Section creation will fail due to:
+* Section creation will fail due to:
 	+ Existing section ID.
 	+ No two sections can occupy the same room at the same time.
 
