@@ -107,7 +107,7 @@ public class Section {
 		}
 	}
 
-	void validateSectionCanAccommodateEnlistment() {
+	public void validateSectionCanAccommodateEnlistment() {
 		if (students.size() >= room.getCapacity()) {
 			throw new RoomCapacityReachedException(
 					"Capacity Reached - enlistments: " + students.size() + " capacity: " + room.getCapacity());

@@ -151,6 +151,18 @@ public class SectionDaoJdbcIT {
 	    
 	}
 	
+	@Test (expected = SectionCreationException.class)
+	public void createSection_that_a_faculty_has_over_lap_with() {
+		
+	    Section section = new Section("S21", 
+	      		 new Subject("OBJECTP"),
+	               new Schedule(Days.MTH, LocalTime.of(8, 30), LocalTime.of(10, 00)), 
+	               new Room("AVR1"),
+	               new Faculty(1, "Optimus", "Prime"));
+	    dao.create(section);
+	    
+	}
+	
 	@Test (expected = RoomScheduleConflictException.class)
 	public void createNewSection_has_roomschedule_conflict_with_another_section() {
 		

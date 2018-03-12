@@ -21,22 +21,6 @@ public class EnlistmentDaoJdbc implements EnlistmentsDAO {
 		this.dataSource = dataSource;
 	}
 
-	// @Override
-	// public void create(Student student, Section section) {
-	// try (Connection conn = dataSource.getConnection();
-	// PreparedStatement stmt =
-	// conn.prepareStatement(SQLUtil.getInstance().getSql("EnlistStudent.sql"))) {
-	// conn.setAutoCommit(false);
-	// stmt.setInt(1, student.getStudentNumber());
-	// stmt.setString(2, section.getSectionId());
-	// stmt.executeUpdate();
-	// } catch (SQLException e) {
-	// throw new DataAccessException(
-	// "Problem enlisting student with student number : " +
-	// student.getStudentNumber(), e);
-	// }
-	// }
-
 	@Override
 	public void create(Student student, Section section) {
 		try (Connection conn = dataSource.getConnection()) {

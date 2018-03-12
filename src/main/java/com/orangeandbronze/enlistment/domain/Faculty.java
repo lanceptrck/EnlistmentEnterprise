@@ -56,7 +56,7 @@ public class Faculty {
 		this(facultyNumber, Collections.emptyList(), null);
 	}
 
-	void addSection(Section newSection) {
+	public void addSection(Section newSection) {
 		if (sections.contains(newSection)) {
 			return;
 		}

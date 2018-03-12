@@ -70,36 +70,42 @@
 					<table>
 						<tr>
 							<th>Days</th>
+						</tr>
+							<tr>
+								<td><input type="radio" name="day"
+									value="MW">Monday/Wednesday</td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="day"
+									value="TF">Tuesday/Friday</td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="day"
+									value="WS">Wednesday/Saturday</td>
+							</tr>
+					</table>
+				</td>
+				<td valign="top">
+					<table>
+						<tr>
 							<th>Period</th>
 						</tr>
 							<tr>
-								<td><input type="checkbox" name="day"
-									value="M">Monday</td>
 								<td><input type="radio" name="period" value="08:30-10:00"/>08:30-10:00</td>
 							</tr>
 							<tr>
-								<td><input type="checkbox" name="day"
-									value="T">Tuesday</td>
 								<td><input type="radio" name="period" value="10:00-11:30"/>10:00-11:30</td>
 							</tr>
 							<tr>
-								<td><input type="checkbox" name="day"
-									value="W">Wednesday</td>
 								<td><input type="radio" name="period" value="11:30-13:00"/>11:30-13:00</td>
 							</tr>
 							<tr>
-								<td><input type="checkbox" name="day"
-									value="TH">Thursday</td>
 								<td><input type="radio" name="period" value="13:00-14:30"/>13:00-14:30</td>
 							</tr>
 							<tr>
-								<td><input type="checkbox" name="day"
-									value="F">Friday</td>
 								<td><input type="radio" name="period" value="14:30-16:00"/>14:30-16:00</td>
 							</tr>
 							<tr>
-								<td><input type="checkbox" name="day"
-									value="S">Saturday</td>
 								<td><input type="radio" name="period" value="16:00-17:30"/>16:00-17:30</td>
 							</tr>
 					</table>

@@ -45,11 +45,9 @@ public class CreateSectionController extends HttpServlet {
 
 	private String parsePeriod(HttpServletRequest request) {
 		StringBuilder sb = new StringBuilder();
-		String[] days = request.getParameterValues("day");
+		String days = request.getParameter("day");
 		String period = request.getParameter("period");
-		for (String day : days) {
-			sb.append(day);
-		}
+		sb.append(days);
 		sb.append(" ");
 		sb.append(period);
 		return sb.toString();

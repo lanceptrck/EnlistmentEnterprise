@@ -178,6 +178,11 @@ public class SectionDaoJdbc implements SectionDAO {
 			throw new RuntimeException("Invalid sql statement"+ e);
 		}
 	}
+	
+	public void test(Section section) {
+		Faculty faculty = section.getFaculty();
+		faculty.addSection(section);
+	}
 
 	@Override
 	public void create(Section section) {
@@ -188,7 +193,7 @@ public class SectionDaoJdbc implements SectionDAO {
 		}
 		
 		if(hasFacultyConflict(section)) {
-			throw new FacultyScheduleConflictException("Faculty is already teaching at "+section.getSchedule());
+			throw new FacultyScheduleConflictException(section.getFaculty().toString()+"is already teaching at "+section.getSchedule());
 		}
 		
 		if(hasRoomScheduleConflict(section)) {
